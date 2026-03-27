@@ -1,7 +1,5 @@
-package com.example.tankspeak.ui.main
+package com.example.tankspeak.ui.models
 
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tankspeak.data.model.TankStatus

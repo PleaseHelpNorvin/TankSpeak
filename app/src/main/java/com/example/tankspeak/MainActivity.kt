@@ -3,45 +3,50 @@ package com.example.tankspeak
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.runtime.*
+
 import com.example.tankspeak.ui.theme.TankSpeakTheme
-import com.example.tankspeak.ui.main.MainScreen
+import com.example.tankspeak.ui.screens.MainScreen
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.tankspeak.ui.global.GlobalViewModel
+import com.example.tankspeak.ui.navigation.Screen
+import com.example.tankspeak.ui.screens.AnotherScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        enableEdgeToEdge()
         setContent {
-            TankSpeakTheme {
-                TankSpeakTheme {
-                    MainScreen()
-                }
+            val globalViewModel: GlobalViewModel = viewModel()
 
+            val isDarkMode = globalViewModel.darkModeEnabled
+
+            TankSpeakTheme(darkTheme = isDarkMode.value) {
+                Navigation(globalViewModel)
             }
         }
     }
 }
-/*
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
+fun Navigation(globalViewModel: GlobalViewModel) {
+    val navController = rememberNavController()
+
+    NavHost(
+        navController = navController,
+        startDestination = Screen.Main.route
+    ) {
+
+        composable(Screen.Main.route) {
+            MainScreen(navController, globalViewModel)
+        }
+
+        composable(Screen.Another.route) {
+            AnotherScreen(navController)
+        }
+    }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    TankSpeakTheme {
-        Greeting("Android")
-    }
-}*/
+
