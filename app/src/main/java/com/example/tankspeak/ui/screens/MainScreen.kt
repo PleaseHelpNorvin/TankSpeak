@@ -3,15 +3,13 @@ package com.example.tankspeak.ui.screens
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import com.example.tankspeak.ui.global.GlobalViewModel
 import androidx.compose.material3.Button
-import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.tankspeak.ui.models.MainViewModel
 import com.example.tankspeak.ui.navigation.Screen
-
 
 @Composable
 fun MainScreen(
@@ -25,9 +23,11 @@ fun MainScreen(
         Text("Main Screen")
         Text("Tank Level: ${tankStatus.value.level}")
 
-        Button(onClick = {
-            navController.navigate(Screen.Another.route)
-        }) {
+        Button(
+            onClick = {
+                navController.navigate(Screen.Another.route)
+            }
+        ) {
             Text("Go to AnotherScreen ")
         }
 

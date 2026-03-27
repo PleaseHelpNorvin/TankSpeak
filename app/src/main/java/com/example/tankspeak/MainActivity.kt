@@ -20,9 +20,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             val globalViewModel: GlobalViewModel = viewModel()
-
             val isDarkMode = globalViewModel.darkModeEnabled
-
             TankSpeakTheme(darkTheme = isDarkMode.value) {
                 Navigation(globalViewModel)
             }
