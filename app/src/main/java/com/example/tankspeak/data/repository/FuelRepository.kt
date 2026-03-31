@@ -5,14 +5,14 @@ import com.example.tankspeak.data.source.FakeDataSource
 
 class FuelRepository {
 
-    fun getFuels(): List<Fuel> {
-        return FakeDataSource.gasStations.flatMap { it.fuels }
+    fun getFuels(): MutableList<Fuel> {
+        return FakeDataSource.gasStations.flatMap { it.fuels }.toMutableList()
     }
 
-    fun getFuelsByGasStation(gasStationId: String): List<Fuel> {
+    fun getFuelsByGasStation(gasStationId: String): MutableList<Fuel> {
         return FakeDataSource.gasStations
             .find { it.id == gasStationId }
-            ?.fuels ?: emptyList()
+            ?.fuels?.toMutableList() ?: mutableListOf()
     }
 
     fun getFuelById(gasStationId: String, fuelId: String): Fuel? {
@@ -23,21 +23,17 @@ class FuelRepository {
     }
 
     fun addFuel(gasStationId: String, fuel: Fuel): Boolean {
-        val station = FakeDataSource.gasStations.find { it.id == gasStationId }
-            ?: return false
+        val station = FakeDataSource.gasStations.find { it.id == gasStationId } ?: return false
 
         val mutableFuels = station.fuels.toMutableList()
         mutableFuels.add(fuel)
-
-        // replace immutable list
         station.fuels = mutableFuels
 
         return true
     }
 
     fun updateFuel(gasStationId: String, updatedFuel: Fuel): Boolean {
-        val station = FakeDataSource.gasStations.find { it.id == gasStationId }
-            ?: return false
+        val station = FakeDataSource.gasStations.find { it.id == gasStationId } ?: return false
 
         val mutableFuels = station.fuels.toMutableList()
         val index = mutableFuels.indexOfFirst { it.id == updatedFuel.id }
@@ -50,13 +46,12 @@ class FuelRepository {
     }
 
     fun deleteFuel(gasStationId: String, fuelId: String): Boolean {
-        val station = FakeDataSource.gasStations.find { it.id == gasStationId }
-            ?: return false
+        val station = FakeDataSource.gasStations.find { it.id == gasStationId } ?: return false
 
         val mutableFuels = station.fuels.toMutableList()
         val removed = mutableFuels.removeIf { it.id == fuelId }
-
         station.fuels = mutableFuels
+
         return removed
     }
 }
