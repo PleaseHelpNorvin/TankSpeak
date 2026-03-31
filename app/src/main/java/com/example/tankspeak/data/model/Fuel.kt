@@ -8,5 +8,5 @@ data class Fuel(
     val anticipatedDryUp: String,
     val fillAlert: String,
     val timeStamp: String,
-    val readings: List<TankReading>?
+    var readings: List<TankReading>?
 )

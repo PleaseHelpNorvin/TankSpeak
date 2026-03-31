@@ -3,7 +3,6 @@ package com.example.tankspeak.ui.models
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tankspeak.data.model.TankStatus
-import com.example.tankspeak.data.repository.TankRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch

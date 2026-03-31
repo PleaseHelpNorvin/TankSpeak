@@ -1,52 +1,62 @@
 package com.example.tankspeak.data.repository
 
 import com.example.tankspeak.data.model.Fuel
-import com.example.tankspeak.data.model.TankReading
-import java.sql.Timestamp
-
+import com.example.tankspeak.data.source.FakeDataSource
 
 class FuelRepository {
-    private val fuels = mutableListOf(
-        Fuel(
-            id = "1", // temporary string
-            name = "Biodiesel",
-            tankCapacity = 5000.0,
-            averageThroughput = 300.0,
-            anticipatedDryUp = "2029-08-07 10:00",
-            fillAlert = "2029-08-06 18:00",
-            timeStamp = "2029-08-06 18:00",
-            readings = mutableListOf(
-                TankReading(
-                    tankName = "Tank 1",
-                    volume = 2227.40,
-                    timeStamp = "14:45:15 (06-08-2029)",
-                    addedVolume = 1900.0
-                )
-            )
-        )
-    )
 
     fun getFuels(): List<Fuel> {
-        return fuels
+        return FakeDataSource.gasStations.flatMap { it.fuels }
     }
 
-    fun getFuelById(id: String): Fuel? {
-        return fuels.find { it.id == id }
+    fun getFuelsByGasStation(gasStationId: String): List<Fuel> {
+        return FakeDataSource.gasStations
+            .find { it.id == gasStationId }
+            ?.fuels ?: emptyList()
     }
 
-    fun addFuel(fuel: Fuel) {
-        fuels.add(fuel)
+    fun getFuelById(gasStationId: String, fuelId: String): Fuel? {
+        return FakeDataSource.gasStations
+            .find { it.id == gasStationId }
+            ?.fuels
+            ?.find { it.id == fuelId }
     }
 
-    fun updateFuel(updatedFuel: Fuel) {
-        val index = fuels.indexOfFirst { it.id == updatedFuel.id }
-        if (index != -1) {
-            fuels[index] = updatedFuel
-        }
+    fun addFuel(gasStationId: String, fuel: Fuel): Boolean {
+        val station = FakeDataSource.gasStations.find { it.id == gasStationId }
+            ?: return false
+
+        val mutableFuels = station.fuels.toMutableList()
+        mutableFuels.add(fuel)
+
+        // replace immutable list
+        station.fuels = mutableFuels
+
+        return true
     }
 
-    fun deleteFuel(id: String) {
-        fuels.removeIf { it.id == id }
+    fun updateFuel(gasStationId: String, updatedFuel: Fuel): Boolean {
+        val station = FakeDataSource.gasStations.find { it.id == gasStationId }
+            ?: return false
+
+        val mutableFuels = station.fuels.toMutableList()
+        val index = mutableFuels.indexOfFirst { it.id == updatedFuel.id }
+
+        return if (index != -1) {
+            mutableFuels[index] = updatedFuel
+            station.fuels = mutableFuels
+            true
+        } else false
     }
 
+    fun deleteFuel(gasStationId: String, fuelId: String): Boolean {
+        val station = FakeDataSource.gasStations.find { it.id == gasStationId }
+            ?: return false
+
+        val mutableFuels = station.fuels.toMutableList()
+        val removed = mutableFuels.removeIf { it.id == fuelId }
+
+        station.fuels = mutableFuels
+        return removed
+    }
 }

@@ -8,5 +8,5 @@ data class GasStation(
     val contactNumber: String,
     val businessHours: String,
     val timeStamp: String,
-    val fuels: List<Fuel>
+    var fuels: MutableList<Fuel>
 )
